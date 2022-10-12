@@ -16,7 +16,10 @@ class _PostCardState extends State<PostCard> {
     return Container(
         height: 100,
         width: double.infinity,
-        color: Colors.red,
-        child: Text(widget.post.id.toString()));
+        color: Colors.indigo,
+        child: Column(children: 
+        [Text(widget.post.id.toString()),
+        Text(widget.post.title.toString()),
+        Text(widget.post.content.toString()),]));
   }
 }
