@@ -9,6 +9,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await CommonPreferences.init();
   await NetStatusListener.init();
+  await HomePageFunctions.init();
 
   runApp(const MyApp());
 }
@@ -34,24 +35,19 @@ class MyHomePage extends StatefulWidget {
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
+  
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int length = 10;
+  void Refresh() {
+    setState((() {
+      postList;
+    }));
+  }
 
-  // 这个后面要自己改
-  List<Post> postList = [
-    Post(id: 114514),
-    Post(id: 1919810),
-    Post(id: 123456),
-    Post(id: 111111),
-    Post(id: 121212),
-    Post(id: 100100),
-    Post(id: 114514),
-    Post(id: 114514),
-    Post(id: 114514),
-    Post(id: 114514),
-  ];
+  int length = 10;
+  
+  static List<Post> postList = [Post(id:114514,title:"试着刷新一下吧",content:"如题")];
 
   @override
   Widget build(BuildContext context) {
@@ -65,23 +61,34 @@ class _MyHomePageState extends State<MyHomePage> {
               '遇到困难的时候请尽可能前往工作室寻求帮助\n',
             ),
             FutureBuilder
-              (
-                future: FeedbackService.getTokenByPassword(),
-                builder: (BuildContext context, AsyncSnapshot<String> data) {
-                  /*表示数据成功返回*/
-                  if (data.data != null) {
-                    String? str = data.data;
-                    return Text("${str}", style: TextStyle(fontSize: 20),);
-                  }
-                  else {
-                    return Text("遇到困难摆大烂", style: TextStyle(fontSize: 20),);
-                  }
+            (
+              future: FeedbackService.getTokenByPassword(),
+              builder: (BuildContext context, AsyncSnapshot<String> data) {
+                if (data.data != null) {
+                  String? str = data.data;
+                  return Text("${str}", style: TextStyle(fontSize: 20),);
                 }
-              ),        
+                else {
+                  return Text("遇到困难摆大烂", style: TextStyle(fontSize: 20),);
+                }
+              }
+            ),
+            FloatingActionButton(
+            child: new Icon(Icons.refresh),
+            tooltip: 'Refresh posts.',
+            onPressed: () async {postList = await FeedbackService.getPosts(); Refresh();}),       
             ...List.generate(length, (index) => PostCard(postList[index]))
           ],
         ),
       ),
     );
+  }
+}
+
+class HomePageFunctions
+{
+  static init() async
+  {
+    _MyHomePageState.postList = await FeedbackService.getPosts();
   }
 }
