@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:twt_mobile_assignment1/you_can_edit_here/post.dart';
 import 'package:twt_mobile_assignment1/you_can_edit_here/post_card.dart';
+import 'package:twt_mobile_assignment1/you_can_edit_here/wpy_service.dart';
+import 'package:twt_mobile_assignment1/things_you_do_not_need_understand/wpy_storage.dart';
+import 'package:twt_mobile_assignment1/things_you_do_not_need_understand/wpy_network.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await CommonPreferences.init();
+  await NetStatusListener.init();
+
   runApp(const MyApp());
 }
 
@@ -57,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '你需要完整地写好卡片的ui，并补充好网络请求部分，\n最后以合适的方式实现数据的获取\n'
               '遇到困难的时候请尽可能前往工作室寻求帮助\n',
             ),
+                   
             ...List.generate(length, (index) => PostCard(postList[index]))
           ],
         ),
