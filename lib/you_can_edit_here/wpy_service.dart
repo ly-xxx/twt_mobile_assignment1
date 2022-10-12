@@ -17,12 +17,9 @@ class FeedbackService with AsyncTimer {
   /// 所以你无需单独传入 token 就可以与微北洋的服务器通信！
   ///
   /// 不过在调用之前请在下面填入你的微北洋账号和密码
-  static getTokenByPassword({
-    required OnSuccess onSuccess,
-    required OnFailure onFailure,
-  }) async {
-    var user = '这里写下你的学号';
-    var passwd = '这里写下你的微北洋密码';
+  static Future<String>? getTokenByPassword() async {
+    var user = '你的微北洋用户名';
+    var passwd = '你的微北洋密码';
     try {
       // response 就是 dio 库 从服务器获得的数据，我们就可以从里面拿到服务器返回的 token 了
       var response =
@@ -33,16 +30,7 @@ class FeedbackService with AsyncTimer {
         'password': passwd,
       });
       // 我们请求到的一串东西（response.data）其实是 json 字符串。
-      // 请务必了解 json 是什么再接着看！！！
-      // 请务必了解 json 是什么再接着看！！！
-      // 请务必了解 json 是什么再接着看！！！
-      // 请务必了解 json 是什么再接着看！！！
-      // 请务必了解 json 是什么再接着看！！！
-      // 请务必了解 json 是什么再接着看！！！
-      // 请务必了解 json 是什么再接着看！！！
-      // 请务必了解 json 是什么再接着看！！！
-      // 请务必了解 json 是什么再接着看！！！
-      // 请务必了解 json 是什么再接着看！！！
+      // 请务必了解 json 是什么再接着看！！！x10
 
       // 我们可以简单地使用 json['条目名称'] 来访问 json 中存放的数值
       // 我们可以简单地使用 json['条目名称'] 来访问 json 中存放的数值
@@ -51,10 +39,12 @@ class FeedbackService with AsyncTimer {
         // 这里的 CommonPreference 是 flutter 应用持久化保存数据的主要方式
         // 这里我们把 lakeToken 的值替换成了请求到的 token 值，可以尝试 print 一下
         // 请按住 Ctrl 并点击 CommonPreferences 继续查看
+
         CommonPreferences.lakeToken.value = response.data['data']['token'];
-      onSuccess();
+        return response.data['data']['token'];
     } on DioError catch (e) {
-      if (onFailure != null) onFailure(e);
+      print("Something bad happened...");
+      return "";
     }
   }
 
