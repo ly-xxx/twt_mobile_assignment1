@@ -64,7 +64,20 @@ class _MyHomePageState extends State<MyHomePage> {
               '你需要完整地写好卡片的ui，并补充好网络请求部分，\n最后以合适的方式实现数据的获取\n'
               '遇到困难的时候请尽可能前往工作室寻求帮助\n',
             ),
-                   
+            FutureBuilder
+              (
+                future: FeedbackService.getTokenByPassword(),
+                builder: (BuildContext context, AsyncSnapshot<String> data) {
+                  /*表示数据成功返回*/
+                  if (data.data != null) {
+                    String? str = data.data;
+                    return Text("${str}", style: TextStyle(fontSize: 20),);
+                  }
+                  else {
+                    return Text("遇到困难摆大烂", style: TextStyle(fontSize: 20),);
+                  }
+                }
+              ),        
             ...List.generate(length, (index) => PostCard(postList[index]))
           ],
         ),

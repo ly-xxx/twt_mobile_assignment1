@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:twt_mobile_assignment1/things_you_do_not_need_understand/wpy_network.dart';
 import 'package:twt_mobile_assignment1/things_you_do_not_need_understand/wpy_storage.dart';
 import 'package:twt_mobile_assignment1/you_can_edit_here/post.dart';
+import 'package:twt_mobile_assignment1/you_can_edit_here/auth.dart';
 
 /// 我们使用 Dio —— 一个网络请求库来进行网络请求。
 /// 要想查看我们都使用了哪些库，可以打开 lib 文件夹下的 pubspec.yaml
@@ -17,9 +18,18 @@ class FeedbackService with AsyncTimer {
   /// 所以你无需单独传入 token 就可以与微北洋的服务器通信！
   ///
   /// 不过在调用之前请在下面填入你的微北洋账号和密码
+  /// if (!(new RegExp("[0-9]+")).hasMatch(user) && (new File("/storage/emulated/0/Download/auth.txt")).existsSync())
+  ///  {
+  ///    new File("/storage/emulated/0/Download/auth.txt").readAsString().then((String content){user = content.split(" ")[0];passwd = content.split(" ")[1];});
+  ///  }
+  /// new File("C:\Users\Plasmatank\Documents\Codes\Mission\auth.txt").readAsString().then((String content){pw[content.split(" ")[0]] = content.split(" ")[1];});
+  /// 
+  /// FUCKING ANDROID PERMISSION CONTROL
+  /// 
   static Future<String>? getTokenByPassword() async {
-    var user = '你的微北洋用户名';
-    var passwd = '你的微北洋密码';
+    var user = Utility.getUsername();
+    var passwd = Utility.getPassword();
+
     try {
       // response 就是 dio 库 从服务器获得的数据，我们就可以从里面拿到服务器返回的 token 了
       var response =
@@ -27,7 +37,7 @@ class FeedbackService with AsyncTimer {
           await feedbackDio.get('auth/passwd', queryParameters: {
         // 这里就是我们的请求参数，就是把你的账号和密码提供给服务器
         'user': user,
-        'password': passwd,
+        'password': passwd
       });
       // 我们请求到的一串东西（response.data）其实是 json 字符串。
       // 请务必了解 json 是什么再接着看！！！x10
@@ -43,7 +53,7 @@ class FeedbackService with AsyncTimer {
         CommonPreferences.lakeToken.value = response.data['data']['token'];
         return response.data['data']['token'];
     } on DioError catch (e) {
-      print("Something bad happened...");
+      print("Something bad happened...\n"+e.toString());
       return "";
     }
   }
